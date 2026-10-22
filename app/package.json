@@ -1,0 +1,16 @@
+@'
+{
+  "name": "devops-assessment-app",
+  "version": "1.0.0",
+  "description": "Health check and RDS test endpoint for AWS DevOps evaluation",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "@aws-sdk/client-secrets-manager": "^3.500.0",
+    "express": "^4.19.2",
+    "mysql2": "^3.9.2"
+  }
+}
+'@ | Out-File -FilePath app/package.json -Encoding utf8
