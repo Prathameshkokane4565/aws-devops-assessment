@@ -43,7 +43,3 @@ jobs:
 
       - name: Terraform Plan
         run: terraform plan -no-color
-
-      - name: Terraform Apply (Sandbox SCP Bound)
-        run: terraform apply -auto-approve -no-color
-        continue-on-error: true
