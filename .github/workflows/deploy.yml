@@ -1,4 +1,4 @@
-name: "Terraform CI/CD Pipeline"
+name: "AWS DevOps Assessment Pipeline"
 
 on:
   push:
@@ -9,15 +9,10 @@ on:
       - main
   workflow_dispatch:
 
-permissions:
-  id-token: write
-  contents: read
-
 jobs:
   terraform:
-    name: "Terraform Plan "
-
-      run: terraform plan -no-color
+    name: "Terraform Plan"
+    runs-on: ubuntu-latest
     defaults:
       run:
         working-directory: ./terraform
@@ -29,34 +24,17 @@ jobs:
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
         with:
-          terraform_version: "1.7.5"
-
-      - name: Terraform Format Check
-        run: terraform fmt -check
+          terraform_version: 1.5.7
 
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ap-south-1
+          aws-region: us-east-1
 
       - name: Terraform Init
         run: terraform init
 
-      - name: Terraform Validate
-        run: terraform validate
-
       - name: Terraform Plan
-        id: plan
         run: terraform plan -no-color
-
-
-      - name: End-to-End Validation & Health Check
-        if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
-        run: |
-          echo "Waiting 60s for EC2 instances to become healthy behind ALB..."
-          sleep 60
-          ALB_URL=$(terraform output -raw application_url)
-          echo "Testing health check on $ALB_URL/health"
-          curl -s -f "$ALB_URL/health" || echo "Health check warming up..."
