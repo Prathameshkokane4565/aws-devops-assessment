@@ -15,8 +15,9 @@ permissions:
 
 jobs:
   terraform:
-    name: "Terraform Plan & Apply"
-    runs-on: ubuntu-latest
+    name: "Terraform Plan "
+
+      run: terraform plan -no-color
     defaults:
       run:
         working-directory: ./terraform
@@ -50,9 +51,6 @@ jobs:
         id: plan
         run: terraform plan -no-color
 
-      - name: Terraform Apply
-        if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
-        run: terraform apply -auto-approve
 
       - name: End-to-End Validation & Health Check
         if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
